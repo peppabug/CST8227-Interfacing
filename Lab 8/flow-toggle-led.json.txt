@@ -1,0 +1,464 @@
+[
+    {
+        "id": "bbb6400f.ca82e",
+        "type": "tab",
+        "label": "Tri-Colour LED (RGB)",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "14396dac.9461f2",
+        "type": "arduino in",
+        "z": "bbb6400f.ca82e",
+        "name": "Button (Pin3)",
+        "pin": "3",
+        "state": "INPUT",
+        "arduino": "b4543f4.a6ae6c",
+        "x": 90,
+        "y": 200,
+        "wires": [
+            [
+                "fa41a066.678ff"
+            ]
+        ]
+    },
+    {
+        "id": "fa41a066.678ff",
+        "type": "debounce",
+        "z": "bbb6400f.ca82e",
+        "time": "500",
+        "name": "Debounce (500ms)",
+        "x": 270,
+        "y": 200,
+        "wires": [
+            [
+                "c4e0fcec.a4a5e"
+            ]
+        ]
+    },
+    {
+        "id": "c4e0fcec.a4a5e",
+        "type": "function",
+        "z": "bbb6400f.ca82e",
+        "name": "Cycle Button Click: 1, 2, 3, 1...",
+        "func": "var clickCount = flow.get(\"rgbState\");\n\nif (clickCount === undefined) {\n    clickCount = 0;\n} else {\n    clickCount++;\n}\nif (clickCount == 4) {\n    clickCount = 1;\n}\n\nflow.set(\"rgbState\", clickCount);\nmsg.payload = clickCount;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 230,
+        "y": 260,
+        "wires": [
+            [
+                "326e5b1e.b8da44",
+                "93f5dc0b.30118"
+            ]
+        ]
+    },
+    {
+        "id": "326e5b1e.b8da44",
+        "type": "switch",
+        "z": "bbb6400f.ca82e",
+        "name": "Switch clickCount",
+        "property": "rgbState",
+        "propertyType": "flow",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "2",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "3",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 4,
+        "x": 530,
+        "y": 260,
+        "wires": [
+            [
+                "8a0e36c6.e48b78",
+                "a7df3330.2109c",
+                "18ab5795.dcd1a8"
+            ],
+            [
+                "ebda8a15.b82358",
+                "a7df3330.2109c",
+                "18ab5795.dcd1a8"
+            ],
+            [
+                "8a0e36c6.e48b78",
+                "77d37e2c.9810e",
+                "18ab5795.dcd1a8"
+            ],
+            [
+                "8a0e36c6.e48b78",
+                "a7df3330.2109c",
+                "9924ad92.74f21"
+            ]
+        ]
+    },
+    {
+        "id": "ebda8a15.b82358",
+        "type": "function",
+        "z": "bbb6400f.ca82e",
+        "name": "Dim",
+        "func": "var dim = flow.get(\"dimmer\") || 0;\n\nvar pinValue = Number(255 * dim / 100).toFixed();\nflow.set(\"dimValue\", pinValue);\nmsg.payload = pinValue;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 790,
+        "y": 180,
+        "wires": [
+            [
+                "fab1e7fb.16a058",
+                "1ba6e2bb.461d3d"
+            ]
+        ]
+    },
+    {
+        "id": "8a0e36c6.e48b78",
+        "type": "change",
+        "z": "bbb6400f.ca82e",
+        "name": "Turn Off",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "0",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 780,
+        "y": 220,
+        "wires": [
+            [
+                "fab1e7fb.16a058"
+            ]
+        ]
+    },
+    {
+        "id": "77d37e2c.9810e",
+        "type": "function",
+        "z": "bbb6400f.ca82e",
+        "name": "Dim",
+        "func": "var dim = flow.get(\"dimmer\") || 0;\n\nvar pinValue = Number(255 * dim / 100).toFixed();\nflow.set(\"dimValue\", pinValue);\nmsg.payload = pinValue;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 790,
+        "y": 280,
+        "wires": [
+            [
+                "3d9952c9.1aaefe",
+                "3458bc30.886384"
+            ]
+        ]
+    },
+    {
+        "id": "a7df3330.2109c",
+        "type": "change",
+        "z": "bbb6400f.ca82e",
+        "name": "Turn Off",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "0",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 780,
+        "y": 320,
+        "wires": [
+            [
+                "3d9952c9.1aaefe"
+            ]
+        ]
+    },
+    {
+        "id": "9924ad92.74f21",
+        "type": "function",
+        "z": "bbb6400f.ca82e",
+        "name": "Dim",
+        "func": "var dim = flow.get(\"dimmer\") || 0;\n\nvar pinValue = Number(255 * dim / 100).toFixed();\nflow.set(\"dimValue\", pinValue);\nmsg.payload = pinValue;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 790,
+        "y": 380,
+        "wires": [
+            [
+                "9a886ffb.547b4",
+                "5d7df679.c0a748"
+            ]
+        ]
+    },
+    {
+        "id": "18ab5795.dcd1a8",
+        "type": "change",
+        "z": "bbb6400f.ca82e",
+        "name": "Turn Off",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "0",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 780,
+        "y": 420,
+        "wires": [
+            [
+                "9a886ffb.547b4"
+            ]
+        ]
+    },
+    {
+        "id": "93f5dc0b.30118",
+        "type": "debug",
+        "z": "bbb6400f.ca82e",
+        "name": "CLICK COUNT IS:",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 270,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "1ba6e2bb.461d3d",
+        "type": "debug",
+        "z": "bbb6400f.ca82e",
+        "name": "RED",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 910,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "3458bc30.886384",
+        "type": "debug",
+        "z": "bbb6400f.ca82e",
+        "name": "GREEN",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "5d7df679.c0a748",
+        "type": "debug",
+        "z": "bbb6400f.ca82e",
+        "name": "BLUE",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 910,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "fab1e7fb.16a058",
+        "type": "arduino out",
+        "z": "bbb6400f.ca82e",
+        "name": "Red (Pin 23)",
+        "pin": "23",
+        "state": "PWM",
+        "arduino": "b4543f4.a6ae6c",
+        "x": 930,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "3d9952c9.1aaefe",
+        "type": "arduino out",
+        "z": "bbb6400f.ca82e",
+        "name": "Green (Pin 20)",
+        "pin": "20",
+        "state": "PWM",
+        "arduino": "b4543f4.a6ae6c",
+        "x": 940,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "9a886ffb.547b4",
+        "type": "arduino out",
+        "z": "bbb6400f.ca82e",
+        "name": "Blue (Pin 21)",
+        "pin": "21",
+        "state": "PWM",
+        "arduino": "b4543f4.a6ae6c",
+        "x": 930,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "612c03c7.0cf4bc",
+        "type": "function",
+        "z": "bbb6400f.ca82e",
+        "name": "Cache Dimmer",
+        "func": "flow.set('dimmer', msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 400,
+        "y": 480,
+        "wires": [
+            [
+                "326e5b1e.b8da44"
+            ]
+        ]
+    },
+    {
+        "id": "b5717e16.e4b95",
+        "type": "rbe",
+        "z": "bbb6400f.ca82e",
+        "name": "Block Unless Value Changes",
+        "func": "rbei",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "property": "payload",
+        "x": 180,
+        "y": 480,
+        "wires": [
+            [
+                "612c03c7.0cf4bc"
+            ]
+        ]
+    },
+    {
+        "id": "92db3467.e0a598",
+        "type": "range",
+        "z": "bbb6400f.ca82e",
+        "minin": "0",
+        "maxin": "1024",
+        "minout": "0",
+        "maxout": "100",
+        "action": "clamp",
+        "round": true,
+        "property": "payload",
+        "name": "0 - 100",
+        "x": 260,
+        "y": 420,
+        "wires": [
+            [
+                "b5717e16.e4b95"
+            ]
+        ]
+    },
+    {
+        "id": "346da828.ce3988",
+        "type": "arduino in",
+        "z": "bbb6400f.ca82e",
+        "name": "Trim Pot (Pin A8)",
+        "pin": "8",
+        "state": "ANALOG",
+        "arduino": "b4543f4.a6ae6c",
+        "x": 100,
+        "y": 420,
+        "wires": [
+            [
+                "92db3467.e0a598"
+            ]
+        ]
+    },
+    {
+        "id": "31a67ca0.589824",
+        "type": "comment",
+        "z": "bbb6400f.ca82e",
+        "name": "Tri-Colour LED (RGB) Toggle with Push-Button and Trim Pot by Michael Turner 040863378",
+        "info": "",
+        "x": 330,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "db7d5689.51bd28",
+        "type": "comment",
+        "z": "bbb6400f.ca82e",
+        "name": "Toggle between red, green, and blue LED with push-button",
+        "info": "",
+        "x": 230,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "c8b95ccb.d745f",
+        "type": "comment",
+        "z": "bbb6400f.ca82e",
+        "name": "Toggle brightness of LED with trim pot",
+        "info": "",
+        "x": 170,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "b4543f4.a6ae6c",
+        "type": "arduino-board",
+        "device": "COM3"
+    }
+]
